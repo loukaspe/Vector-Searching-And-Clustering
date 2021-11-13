@@ -16,6 +16,14 @@ T urandom(T range_from, T range_to) {
 }
 
 template<typename T>
+T urandomf(T range_from, T range_to) {
+    static std::random_device rand_dev;
+    static std::mt19937 generator(rand_dev());
+    std::uniform_real_distribution<T> distr(range_from, range_to);
+    return (float) distr(generator);
+}
+
+template<typename T>
 T nrandom(T m, T e) {
     static std::default_random_engine generator;
     std::normal_distribution<double> distr(m, e);

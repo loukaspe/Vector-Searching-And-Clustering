@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <chrono>
 
+NearestNeighbourSolver::NearestNeighbourSolver(DataSet & input) : input(input), query(input) {
+
+}
+
 NearestNeighbourSolver::NearestNeighbourSolver(DataSet & input, DataSet & query) : input(input), query(query) {
 
 }
@@ -152,6 +156,58 @@ vector<NearestNeighbourSolver::NearestNeighbor> * NearestNeighbourSolver::cube(u
         t[i] = chrono::duration_cast<chrono::milliseconds>(end - start).count();
     }
 
+
+    return data;
+}
+
+// clustering
+HashTable * NearestNeighbourSolver::prepareHashtables(int nohashtables, int T, int noFunctions, int W) {
+    unsigned d = input.lines[0].data.size();
+
+    HashTable * hashtables = new HashTable[nohashtables];
+
+    for (int i = 0; i < nohashtables; i++) {
+        hashtables[i].setup(T, noFunctions, W, d);
+    }
+
+    for (unsigned int i = 0; i < input.lines.size(); i++) {
+        for (int l = 0; l < nohashtables; l++) {
+            hashtables[l].add(&input.lines[i]);
+        }
+    }
+
+    return hashtables;
+}
+
+vector<NearestNeighbourSolver::NearestNeighbor> * NearestNeighbourSolver::lsh(HashTable * hashtables, DataSet & query, int nohashtables, int T, int noFunctions, int W) {
+    unsigned q = query.lines.size();
+    unsigned d = input.lines[0].data.size();
+
+    vector<NearestNeighbor> * data = new vector<NearestNeighbor>[q];
+
+    DistanceCalculator calc(false);
+
+    for (unsigned int i = 0; i < query.lines.size(); i++) {
+        set<int> hits;
+
+        for (int l = 0; l < nohashtables; l++) {
+            set<int> offsets = hashtables[l].getNeighbors(query.lines[i]);
+
+            for (auto x : offsets) {
+                hits.insert(x);
+            }
+        }
+
+        for (auto offset : hits) {
+            double dist = calc.calculateDistance(query.lines[i], input.lines[offset]);
+
+            NearestNeighbor n(offset, dist);
+            data[i].push_back(n);
+
+        }
+
+        sort(data[i].begin(), data[i].end(), compareNearestNeighbor);
+    }
 
     return data;
 }
