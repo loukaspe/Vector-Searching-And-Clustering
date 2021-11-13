@@ -1,4 +1,4 @@
-OBJS    = main_clustering.o CommandLineParser.o DataLine.o DataSet.o DistanceCalculator.o FileReader.o Generator.o HashFunctionCalculator.o HashFunctionH.o HashTable.o HashFunctionG.o HashFunctionF.o InnerProductCalculator.o NearestNeighbourSolver.o  ClusteringSolver.o
+OBJS    = main_lsh.o main_cube.o main_clustering.o ParametersFileReader.o CommandLineParser.o DataLine.o DataSet.o DistanceCalculator.o FileReader.o Generator.o HashFunctionCalculator.o HashFunctionH.o HashTable.o HashFunctionG.o HashFunctionF.o InnerProductCalculator.o NearestNeighbourSolver.o  ClusteringSolver.o
 OUT     = lsh cube cluster
 
 OBJS0   = main_lsh.o CommandLineParser.o DataLine.o DataSet.o DistanceCalculator.o FileReader.o Generator.o HashFunctionCalculator.o HashFunctionH.o HashTable.o HashFunctionG.o InnerProductCalculator.o NearestNeighbourSolver.o
@@ -8,12 +8,12 @@ OUT0    = lsh
 
 OBJS1   = main_cube.o CommandLineParser.o DataLine.o DataSet.o DistanceCalculator.o FileReader.o Generator.o HashFunctionCalculator.o HashFunctionH.o HashFunctionG.o HashFunctionF.o HashTable.o InnerProductCalculator.o NearestNeighbourSolver.o
 SOURCE1 = main_cube.cpp CommandLineParser.cpp DataLine.cpp DataSet.cpp DistanceCalculator.cpp FileReader.cpp Generator.cpp HashFunctionCalculator.cpp HashFunctionH.cpp HashFunctionG.cpp HashFunctionF.cpp HashTable.cpp InnerProductCalculator.cpp NearestNeighbourSolver.cpp
-HEADER1 = CommandLineParser.h Dataline.h DataSet.h DistanceCalculator.h errors.h FileReader.h Generator.h HashFunctionCalculator.h HashFunctionH.h HashFunctionG.h HashFunctionF.h HashTable.h HashTable_1.h InnerProductCalculator.h NearestNeighbourSolver.h 
+HEADER1 = CommandLineParser.h Dataline.h DataSet.h DistanceCalculator.h errors.h FileReader.h Generator.h HashFunctionCalculator.h HashFunctionH.h HashFunctionG.h HashFunctionF.h HashTable.h HashTable_1.h InnerProductCalculator.h NearestNeighbourSolver.h
 OUT1    = cube
 
-OBJS2   = main_clustering.o CommandLineParser.o DataLine.o DataSet.o DistanceCalculator.o FileReader.o Generator.o HashFunctionCalculator.o HashFunctionH.o HashTable.o HashFunctionG.o HashFunctionF.o InnerProductCalculator.o NearestNeighbourSolver.o  ClusteringSolver.o
-SOURCE2 = main_clustering.cpp CommandLineParser.cpp DataLine.cpp DataSet.cpp DistanceCalculator.cpp FileReader.cpp Generator.cpp HashFunctionCalculator.cpp HashFunctionH.cpp HashTable.cpp HashFunctionF.cpp HashFunctionG.cpp InnerProductCalculator.cpp NearestNeighbourSolver.cpp  ClusteringSolver.cpp
-HEADER2 = CommandLineParser.h Dataline.h DataSet.h DistanceCalculator.h errors.h FileReader.h Generator.h HashFunctionCalculator.h HashFunctionH.h HashFunctionF.h HashFunctionG.h HashTable.h HashTable_1.h InnerProductCalculator.h NearestNeighbourSolver.h ClusteringSolver.h
+OBJS2   = main_clustering.o ParametersFileReader.o CommandLineParser.o DataLine.o DataSet.o DistanceCalculator.o FileReader.o Generator.o HashFunctionCalculator.o HashFunctionH.o HashTable.o HashFunctionG.o HashFunctionF.o InnerProductCalculator.o NearestNeighbourSolver.o  ClusteringSolver.o
+SOURCE2 = main_clustering.cpp ParametersFileReader.cpp CommandLineParser.cpp DataLine.cpp DataSet.cpp DistanceCalculator.cpp FileReader.cpp Generator.cpp HashFunctionCalculator.cpp HashFunctionH.cpp HashTable.cpp HashFunctionF.cpp HashFunctionG.cpp InnerProductCalculator.cpp NearestNeighbourSolver.cpp  ClusteringSolver.cpp
+HEADER2 = CommandLineParser.h ParametersFileReader.h Dataline.h DataSet.h DistanceCalculator.h errors.h FileReader.h Generator.h HashFunctionCalculator.h HashFunctionH.h HashFunctionF.h HashFunctionG.h HashTable.h HashTable_1.h InnerProductCalculator.h NearestNeighbourSolver.h ClusteringSolver.h
 OUT2   = cluster
 
 CC       = g++
