@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int main_lsh(int argc, char** argv) {
+int main(int argc, char** argv) {
 
     CommandLineParser parser;
 
