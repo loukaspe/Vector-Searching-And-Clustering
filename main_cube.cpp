@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
         for (int j = 0; j < parser.no_nearest_neighbors; j++) {
             cout << "Brute NN " << j << ":" << "\t" << result_bf[i][j].index << "\t" << inputReader.set.lines[result_bf[i][j].index].id << "\t" << sqrt(result_bf[i][j].distance) << endl;
             
-            if (j < result_cube[i].size()) {
+            if ((unsigned)j < result_cube[i].size()) {
                 cout << "Cube  NN " << j << ":" << "\t" << result_cube[i][j].index << "\t" << inputReader.set.lines[result_cube[i][j].index].id << "\t" << sqrt(result_cube[i][j].distance) << endl;
             }
         }
@@ -73,9 +73,6 @@ int main(int argc, char** argv) {
         }
     }
 
-
-
-   
     return 0;
 }
 

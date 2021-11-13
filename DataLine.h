@@ -11,10 +11,8 @@ public:
     int offset;
     string id;
     vector<float> data;
-    
-    int getDimension() {
-        return (int) data.size();
-    }
+
+    int getDimension();
 };
 
 #endif /* DATA_H */
