@@ -53,7 +53,6 @@ HashFunctionF: ορίζονται οι hashfunctions F που μας οδήγο�
 HashFunctionG: ορίζονται οι συναρτήσεις g 
 HashFunctionH: ορίζονται οι συναρτήσεις h 
 HashTable: οριζεται το hashtable για τη μέθοδο lsh
-HashTable_1: το hashtable για τη μέθοδο με τον κύβο
 HashTableCube: το hashtable για τη μέθοδο με τον κύβο
 InnerProductCalculator: υπολογίζει το εσωτερικό γινόμενο διανυσμάτων d διαστασης
 main_cube: τρέχει τη μέθοδο cube για την εύρεση πλησιέστερου γείτονα
