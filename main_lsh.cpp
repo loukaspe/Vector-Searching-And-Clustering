@@ -24,8 +24,8 @@ int main_lsh(int argc, char** argv) {
     FileReader inputReader;
     FileReader queryReader;
 
-    inputReader.load("input_small_id.txt");
-    queryReader.load("query_small_id.txt");
+    inputReader.load(parser.inputfile.c_str());
+    queryReader.load(parser.queryfile.c_str());
 
     parser.T = inputReader.N / 8;
 
