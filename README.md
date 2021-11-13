@@ -41,23 +41,23 @@ L συναρτήσεις g (HashFunctionG.h) και L hash tables (HashTable.h) 
 
 **Επεξήγηση Αρχείων & Κλάσεων**
 
-CommandLineParser:
-DataLine:
-DataSet:
-DistanceCalculator:
-errors.h:
-FileReader:
-Generator:
-HashFunctionCalculator:
-HashFunctionF:
-HashFunctionG:
-HashFunctionH:
-HashTable:
-HashTable_1:
-HashTableCube:
-InnerProductCalculator:
-main_cube:
-main_lsh:
-NearestNeighbourSolver:
+CommandLineParser: κλάση μέσω της οποίας διαβάζονται οι εντολές από τη γραμμή εντολών
+DataLine: κλάση που αντιπροσωπεύει ένα αντικείμενο d διάστασης, έχει id και στη συνέχεια ακολοθούν οι συντεταγμένες σε κάθε διασταση
+DataSet: κλάση για το σύνολο των Dataline
+DistanceCalculator: κλάση για τον υπολογισμό της ευκλείδιας απόστασης δύο διανυσμάτων διάστασης d
+errors.h: κλάση για εμφάνιση λαθών στον υπολογισμό της απόστασης και το εσωτερικό γινόμενο διανυσμάτων
+FileReader: κλάση μεσω της οποίας διαβάζονται τα input_file και το query_file
+Generator:κλαση στην οποία παράγονται διανύσματα με κανονική/γκαουσιανή κατανομή ή ομοιόμορφη κατανομή
+HashFunctionCalculator: παράγονται οι αναγκαίες συναρτήσεις οι h, g και f 
+HashFunctionF: ορίζονται οι hashfunctions F που μας οδήγούν στο hashtable με τη μέθοδο cube
+HashFunctionG: ορίζονται οι συναρτήσεις g 
+HashFunctionH: ορίζονται οι συναρτήσεις h 
+HashTable: οριζεται το hashtable για τη μέθοδο lsh
+HashTable_1: το hashtable για τη μέθοδο με τον κύβο
+HashTableCube: το hashtable για τη μέθοδο με τον κύβο
+InnerProductCalculator: υπολογίζει το εσωτερικό γινόμενο διανυσμάτων d διαστασης
+main_cube: τρέχει τη μέθοδο cube για την εύρεση πλησιέστερου γείτονα
+main_lsh: ρέχει τη μέθοδο lsh για την εύρεση πλησιέστερου γείτονα
+NearestNeighbourSolver: υλοποιείται ο πλησιέστερος γείτονας με τις 3 μεθόδους και αντίστοιχα για το clustering
 
 **Ερμηνεία Αποτελεσμάτων**
