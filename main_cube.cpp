@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
     FileReader inputReader;
     FileReader queryReader;
 
-    inputReader.load("input_small_id.txt");
-    queryReader.load("query_small_id.txt");
+    inputReader.load(parser.inputfile.c_str());
+    queryReader.load(parser.queryfile.c_str());
 
     cout << "Input N: " << inputReader.N << endl;
     cout << "Query N: " << queryReader.N << endl;
