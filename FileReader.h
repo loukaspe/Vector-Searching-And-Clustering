@@ -11,7 +11,8 @@ class FileReader {
 public:
     DataSet set;
     int N;
-    
+    int d;
+
     void load(string file);
 };
 

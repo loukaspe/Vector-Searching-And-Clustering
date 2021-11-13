@@ -7,20 +7,24 @@
 
 using namespace std;
 
-// main_lsh
-
-// e.g.: x = 7, bits = 4 => x = "0111"
-// probes: 1 = { 0111, 1111,0011,0101, 0110 }
-
-// return: all numbers n such that hamming distance(x,n) <= probes
-
 vector<int> HashTableCube::getRelativeBuckets(int x, int probes, int bits) {
     vector<int> buckets;
-    
-    buckets.push_back(x);
-    
-    // TODO: add all other buckets with hd(x,n) <= probes
-    
+    int numberOfBits;
+    int i = 0;
+
+    while(true){
+        numberOfBits = this->countBits(i);
+        if (numberOfBits > bits) {
+            break;
+        }
+
+        if(this->calculateHammingDistance(x, i) <= probes) {
+            buckets.push_back(i);
+        }
+
+        i++;
+    }
+
     return buckets;
 }
 
@@ -122,4 +126,27 @@ set<int> HashTableCube::getNeighbors(DataLine & query, int probes) {
     }
 
     return offsets;
+}
+
+int HashTableCube::calculateHammingDistance(int n1, int n2) {
+    int x = n1 ^ n2;
+    int setBits = 0;
+
+    while (x > 0) {
+        setBits += x & 1;
+        x >>= 1;
+    }
+
+    return setBits;
+}
+
+int HashTableCube::countBits(unsigned int number)
+{
+    unsigned int count = 0;
+    while (number)
+    {
+        count++;
+        number >>= 1;
+    }
+    return count;
 }

@@ -8,11 +8,12 @@ using namespace std;
 
 class DataLine {
 public:
+    int offset;
     string id;
     vector<float> data;
     
     int getDimension() {
-        return data.size();
+        return (int) data.size();
     }
 };
 

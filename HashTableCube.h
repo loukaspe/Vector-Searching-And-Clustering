@@ -37,6 +37,10 @@ public:
     set<int> getNeighbors(DataLine & query, int probes);
 private:
     vector<int> getRelativeBuckets(int x, int probes, int bits);
+
+    int calculateHammingDistance(int n1, int n2);
+
+    int countBits(unsigned int number);
 };
 
 #endif /* HASHTABLE_H */

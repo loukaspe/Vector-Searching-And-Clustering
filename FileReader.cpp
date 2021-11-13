@@ -15,18 +15,24 @@ void FileReader::load(string file) {
     N = 0;
 
     file_handler.open(file);
+
     if (file_handler.is_open()) {
         while (getline(file_handler, line)) {
+            d =0;
+
             DataLine dataline;
             
             stringstream ss(line.c_str());
             
             ss >> dataline.id;
+
+            dataline.offset = N;
             
             float token;
             
             while (ss >> token) {
                 dataline.data.push_back(token);
+                d++;
             }
             
             set.lines.push_back(dataline);
