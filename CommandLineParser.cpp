@@ -57,7 +57,7 @@ void CommandLineParser::parseLSH(int argc, char * argv[]) {
 void CommandLineParser::parseCube(int argc, char * argv[]) {
     for (int i = 1; i < argc; i++) {
 
-        if (argv[i] == std::string("-i ")) {
+        if (argv[i] == std::string("-i")) {
             inputfile = argv[i + 1 ];
         }
 
@@ -94,7 +94,7 @@ void CommandLineParser::parseCube(int argc, char * argv[]) {
 void CommandLineParser::parseClustering(int argc, char * argv[]) {
     for (int i = 1; i < argc; i++) {
 
-        if (argv[i] == std::string("-i ")) {
+        if (argv[i] == std::string("-i")) {
             inputfile = argv[i + 1 ];
         }
 

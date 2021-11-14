@@ -35,14 +35,12 @@ public:
     NearestNeighbourSolver(DataSet & input, DataSet & query);
     virtual ~NearestNeighbourSolver();
 
-    // A
     vector<NearestNeighbourSolver::NearestNeighbor> * bruteForce(unsigned N, int t[]);
 
     vector<NearestNeighbourSolver::NearestNeighbor> * lsh(unsigned N, int nohashtables, int T, int noFunctions, int W, int t[]);
 
     vector<NearestNeighbourSolver::NearestNeighbor> * cube(unsigned N, int no_of_g, int max_points_to_control, int probes, int T, int noFunctions, int W, int t[]);
 
-    // B
     HashTable * prepareHashtables(int nohashtables, int T, int noFunctions, int W);
 
     vector<NearestNeighbourSolver::NearestNeighbor> * lsh(HashTable * hashtables, DataSet & query, int nohashtables, int T, int noFunctions, int W);
