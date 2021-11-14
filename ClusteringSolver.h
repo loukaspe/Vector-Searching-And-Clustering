@@ -1,10 +1,15 @@
 #ifndef CLUSTERINGSOLVER_H
 #define CLUSTERINGSOLVER_H
 
+#include <vector>
+
 #include "DataSet.h"
 #include "DataLine.h"
-
-#include <vector>
+#include "ClusteringSolver.h"
+#include "Generator.h"
+#include "DistanceCalculator.h"
+#include "NearestNeighbourSolver.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -35,5 +40,7 @@ public:
 
     void print(ClusteringSolver::Cluster * initialState, int clusters, bool complete);
 };
+
+void log(stringstream *logs, Logger* logger);
 
 #endif /* CLUSTERINGSOLVER_H */

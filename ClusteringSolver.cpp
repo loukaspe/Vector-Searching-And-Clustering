@@ -4,10 +4,6 @@
 #include <map>
 
 #include "ClusteringSolver.h"
-#include "Generator.h"
-#include "DistanceCalculator.h"
-#include "NearestNeighbourSolver.h"
-#include "Logger.h"
 
 ClusteringSolver::ClusteringSolver(DataSet & input, string outputfile) : input(input), outputFile(outputfile) {
 
@@ -20,7 +16,6 @@ ClusteringSolver::~ClusteringSolver() {
 void ClusteringSolver::printInitialState(ClusteringSolver::Cluster * initialState, int clusters) {
     Logger *logger = new Logger(this->outputFile);
     stringstream ss;
-
     cout << "Initial State: " << endl;
 
     for (int i = 0; i < clusters; i++) {
@@ -99,7 +94,7 @@ ClusteringSolver::Cluster * ClusteringSolver::initialization(int clusters) {
 
     cout << "Initialization ... " << endl;
 
-    ClusteringSolver::Cluster * initialState = new ClusteringSolver::Cluster[clusters];
+    ClusteringSolver::Cluster * initialState = new ClusteringSolver::Cluster[clusters]();
 
     DistanceCalculator calc(false);
 
@@ -164,7 +159,7 @@ ClusteringSolver::Cluster * ClusteringSolver::initialization(int clusters) {
 }
 
 ClusteringSolver::Cluster * ClusteringSolver::update(ClusteringSolver::Cluster * now, int clusters) {
-    ClusteringSolver::Cluster * nextState = new ClusteringSolver::Cluster[clusters];
+    ClusteringSolver::Cluster * nextState = new ClusteringSolver::Cluster[clusters]();
 
     cout << "Update ... " << endl;
 

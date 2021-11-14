@@ -12,6 +12,7 @@
 #include "NearestNeighbourSolver.h"
 #include "ClusteringSolver.h"
 #include "ParametersFileReader.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -32,6 +33,9 @@ int main(int argc, char** argv) {
     int number_of_probes = parametersFileReader->getNumberOfProbes();
 
     int W = 500;
+
+    Logger *logger = new Logger(parser.outputfile);
+    stringstream ss;
 
     FileReader inputReader;
 
@@ -61,10 +65,11 @@ int main(int argc, char** argv) {
 
     solver.print(result, number_of_clusters, parser.complete);
 
-    cout << "Time: " << t[0] << " ms " << endl;
+    ss << "Time: " << t[0] << " ms " << endl;
+    log(&ss, logger);
 
     // TODO: silhouette
+    logger->close();
 
     return 0;
 }
-

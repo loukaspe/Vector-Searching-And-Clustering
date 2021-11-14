@@ -161,4 +161,4 @@ Logger.o: Logger.cpp
 	$(CC) $(FLAGS) Logger.cpp
 
 clean:
-	rm -f $(OBJS) $(OUT)
+	rm -f $(OBJS) $(OUT) output.txt
