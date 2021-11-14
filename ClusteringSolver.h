@@ -39,9 +39,9 @@ public:
     ClusteringSolver::Cluster * lsh(int clusters, int t[], int number_of_vector_hash_tables, int number_of_vector_hash_functions, int W);
     ClusteringSolver::Cluster * cube(int clusters, int t[], int number_of_vector_hash_tables, int number_of_vector_hash_functions, int W, int max_number_M_hypercube, int number_of_hypercube_dimensions, int number_of_probes);
 
-    void print(ClusteringSolver::Cluster * initialState, int clusters, bool complete);
+    void print(ClusteringSolver::Cluster * initialState, int clusters, bool complete, int t[]);
 
-    void silhouette(ClusteringSolver::Cluster * lastState, int clusters);
+    void silhouette(ClusteringSolver::Cluster * lastState, int clusters, int t[]);
 };
 
 void log(stringstream *logs, Logger* logger);

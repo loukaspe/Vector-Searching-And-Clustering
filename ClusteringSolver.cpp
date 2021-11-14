@@ -14,8 +14,6 @@ ClusteringSolver::~ClusteringSolver() {
 }
 
 void ClusteringSolver::printInitialState(ClusteringSolver::Cluster * initialState, int clusters) {
-    Logger *logger = new Logger(this->outputFile);
-    stringstream ss;
     cout << "Initial State: " << endl;
 
     for (int i = 0; i < clusters; i++) {
@@ -23,18 +21,15 @@ void ClusteringSolver::printInitialState(ClusteringSolver::Cluster * initialStat
 
         cout << "Center: ";
         for (int j = 0; j < initialState[i].center->getDimension(); j++) {
-            ss << initialState[i].center->data[j] << ",";
-            log(&ss, logger);
+            cout << initialState[i].center->data[j] << ",";
         }
         cout << "..." << endl;
     }
 
-    ss << endl;
-    log(&ss, logger);
-    logger->close();
+    cout << endl;
 }
 
-void ClusteringSolver::print(ClusteringSolver::Cluster * initialState, int clusters, bool complete) {
+void ClusteringSolver::print(ClusteringSolver::Cluster * initialState, int clusters, bool complete, int t[]) {
     Logger *logger = new Logger(this->outputFile);
     stringstream ss;
 
@@ -44,45 +39,37 @@ void ClusteringSolver::print(ClusteringSolver::Cluster * initialState, int clust
     cout << "Final State: " << endl;
 
     for (int i = 0; i < clusters; i++) {
-        ss << "---------------------------------" << endl;
-        log(&ss, logger);
-        ss << "        Cluster: " << i << endl;
-        log(&ss, logger);
-        ss << "---------------------------------" << endl;
+        ss << "CLUSTER-: " << i << endl;
         log(&ss, logger);
 
-        ss << "+ Center: ";
+        ss << "\tsize: " << initialState[i].indices.size() << endl;
+        log(&ss, logger);
+
+        ss << "\tcentroid: ";
         log(&ss, logger);
         for (int j = 0; j < initialState[i].center->getDimension(); j++) {
             ss << initialState[i].center->data[j] << ",";
             log(&ss, logger);
         }
+
         ss << endl;
         log(&ss, logger);
 
-        ss << "Size: " << initialState[i].indices.size() << endl;
-        log(&ss, logger);
-        cout << "Silhoutte: " << initialState[i].silhouette << endl;
-
-
         if (complete) {
-            ss << "IDs: " << endl;
+            ss << "\titem ids: ";
             log(&ss, logger);
 
             for (unsigned j = 0; j < initialState[i].indices.size(); j++) {
                 ss << input.lines[initialState[i].indices[j]].id << "\t";
                 log(&ss, logger);
-                if (j % 10 == 0) {
-                    ss << endl;
-                    log(&ss, logger);
-                }
             }
-
-            ss << endl;
-            log(&ss, logger);
         }
 
+        ss << "\tclustering_time: " << t[i]  << endl;
+        log(&ss, logger);
 
+        ss << "\tSilhoutte: " << initialState[i].silhouette << endl;
+        log(&ss, logger);
     }
 
     ss << endl;
@@ -239,16 +226,10 @@ ClusteringSolver::Cluster * ClusteringSolver::lloyd(int clusters, int t[]) {
 
     t[0] = chrono::duration_cast<chrono::milliseconds>(end - start).count();
 
-
     return currentState;
-
-
 }
 
 ClusteringSolver::Cluster * ClusteringSolver::lsh(int clusters, int t[], int number_of_vector_hash_tables, int number_of_vector_hash_functions, int W) {
-    Logger *logger = new Logger(this->outputFile);
-    stringstream ss;
-
     DistanceCalculator calc(false);
 
     algorithm = "LSH";
@@ -339,8 +320,7 @@ ClusteringSolver::Cluster * ClusteringSolver::lsh(int clusters, int t[], int num
             for (int cluster_id = 0; cluster_id < clusters; cluster_id++) {
                 unsigned j = 0;
 
-                ss << result_lsh[cluster_id].size() << endl;
-                log(&ss, logger);
+                cout << result_lsh[cluster_id].size() << endl;
                 while (j < result_lsh[cluster_id].size() && sqrt(result_lsh[cluster_id][j].distance) <= R) {
 //                    cout << "loop j = " << j << endl;
                     int index = result_lsh[cluster_id][j].index;
@@ -416,10 +396,8 @@ ClusteringSolver::Cluster * ClusteringSolver::lsh(int clusters, int t[], int num
 
     t[0] = chrono::duration_cast<chrono::milliseconds>(end - start).count();
 
-
     delete [] hashtables;
 
-    logger->close();
     return currentState;
 }
 
@@ -439,7 +417,7 @@ ClusteringSolver::Cluster * ClusteringSolver::cube(int clusters, int t[], int nu
     int no_of_g = (int)log2(input.lines.size());
 
     // ---------------------------------------
-    //          1b. Initialization - LSH
+    //          1b. Initialization - Hypercube
     // ---------------------------------------
 
     int T = n / 8;
@@ -452,7 +430,7 @@ ClusteringSolver::Cluster * ClusteringSolver::cube(int clusters, int t[], int nu
 
 
     // ----------------------------------------------------
-    //          1c. Initialization - Reverse approach LSH
+    //          1c. Initialization - Reverse approach Hypercube
     // ----------------------------------------------------
     map<int, int> item_cluster; // item -> cluster_id
     map<int, float> item_distance; // item -> distance from cluster
@@ -603,7 +581,7 @@ void log(stringstream *logs, Logger* logger) {
     logs->str(std::string());
 }
 
-void ClusteringSolver::silhouette(ClusteringSolver::Cluster * lastState, int clusters) {
+void ClusteringSolver::silhouette(ClusteringSolver::Cluster * lastState, int clusters, int t[]) {
     DistanceCalculator calc(false);
 
     for (int best_cluster = 0; best_cluster < clusters; best_cluster++) { // for each cluster

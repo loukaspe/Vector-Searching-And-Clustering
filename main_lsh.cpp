@@ -55,21 +55,27 @@ int main(int argc, char** argv) {
         ss << "Query #" << i << ": " << endl;
         log(&ss, logger);
 
-        ss << "Brute time : " << t_bf[i] << " ms " << endl;
-        log(&ss, logger);
-        ss << "LSH   time : " << t_lsh[i] << " ms " << endl;
-        log(&ss, logger);
-
         for (int j = 0; j < parser.no_nearest_neighbors; j++) {
-            ss << "Brute NN " << j << ":" << "\t" << result_bf[i][j].index << "\t" << inputReader.set.lines[result_bf[i][j].index].id << "\t" << sqrt(result_bf[i][j].distance) << endl;
+            ss << "Nearest neighbor-" << j << ":" << "\t" << result_lsh[i][j].index << endl;
             log(&ss, logger);
-            ss << "LSH   NN " << j << ":" << "\t" << result_lsh[i][j].index << "\t" << inputReader.set.lines[result_lsh[i][j].index].id << "\t" << sqrt(result_lsh[i][j].distance) << endl;
+//            ss << "distanceLSH" << j << ":" << "\t" << result_lsh[i][j].index << "\t" << inputReader.set.lines[result_lsh[i][j].index].id << "\t" << sqrt(result_lsh[i][j].distance) << endl;
+            ss << "distanceLSH" << ":" << "\t" << sqrt(result_lsh[i][j].distance) << endl;
+            log(&ss, logger);
+//            ss << "distanceTrue" << j << ":" << "\t" << result_bf[i][j].index << "\t" << inputReader.set.lines[result_bf[i][j].index].id << "\t" << sqrt(result_bf[i][j].distance) << endl;
+            ss << "distanceTrue" << ":" << "\t" << sqrt(result_bf[i][j].distance) << endl;
+            log(&ss, logger);
+
+            ss << "tTrue : " << t_bf[i] << " ms " << endl;
+            log(&ss, logger);
+
+            ss << "tLSH : " << t_lsh[i] << " ms " << endl;
             log(&ss, logger);
         }
 
         unsigned j = 0;
 
-        ss << "Neighbors within R = " << parser.radius << endl;
+        ss << "R-near neighbors:" << endl;
+        cout << "R = " << parser.radius << endl;
         log(&ss, logger);
 
         while (sqrt(result_bf[i][j].distance) < parser.radius && j < result_bf[i].size()) {

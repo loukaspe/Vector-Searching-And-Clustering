@@ -17,7 +17,7 @@ To πρόγραμμα τρέχει σύμφωνα με τις προδιαγρα
 - **make cube** _Compile Hypercube part (A MEROS)_
 - **make cluster** _Compile Clustering part (B MEROS)_
 - **make clean** _Clean all object and output files_
-- **./lsh -i input_small_id -q query_small_id -k 4 -L 5 -ο output.txt -N 1 -R 10000**
+- **./lsh -i input_small_id -q query_small_id -k 4 -L 5 -o output.txt -N 1 -R 10000**
   _Run A MEROS part a._
 - **./cube -i input_small_id -q query_small_id -k 14 -M 10 -probes 2 -o output.txt -N 1 -R 10000**
   _Run A MEROS part b._
@@ -80,5 +80,4 @@ L συναρτήσεις g (HashFunctionG.h) και L hash tables (HashTable.h) 
 - **ParametersFileReader**: κλάση για να διαβάζει τις παραμέτρους του clustering
 - **Logger**: κλάση για το γράψιμο των logs σε output file
 
-**Ερμηνεία Αποτελεσμάτων**:
 

@@ -43,7 +43,6 @@ int main(int argc, char** argv) {
 
     cout << "Input N: " << inputReader.N << endl;
 
-
     ClusteringSolver solver(inputReader.set, parser.outputfile);
 
     ClusteringSolver::Cluster * result = nullptr;
@@ -62,12 +61,9 @@ int main(int argc, char** argv) {
         result = solver.cube(number_of_clusters, t, number_of_vector_hash_tables, number_of_vector_hash_functions, W, max_number_M_hypercube, number_of_hypercube_dimensions, number_of_probes);
     }
 
-    solver.silhouette(result, number_of_clusters);
+    solver.silhouette(result, number_of_clusters, t);
 
-    solver.print(result, number_of_clusters, parser.complete);
-
-    ss << "Time: " << t[0] << " ms " << endl;
-    log(&ss, logger);
+    solver.print(result, number_of_clusters, parser.complete, t);
 
     logger->close();
 

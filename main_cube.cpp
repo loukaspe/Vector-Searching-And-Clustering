@@ -22,7 +22,6 @@ int main(int argc, char** argv) {
     parser.parseCube(argc, argv);
     parser.W = 500;
 
-
     FileReader inputReader;
     FileReader queryReader;
 
@@ -43,9 +42,10 @@ int main(int argc, char** argv) {
 
     parser.T = (int) pow(2, no_of_g);
 
+    cout << "Brute force running ... " << endl;
     vector<NearestNeighbourSolver::NearestNeighbor> * result_bf = solver.bruteForce(parser.no_nearest_neighbors, t_bf);
 
-    cout << "LSH running ... " << endl;
+    cout << "Cube running ... " << endl;
     vector<NearestNeighbourSolver::NearestNeighbor> * result_cube = solver.cube(parser.no_nearest_neighbors, no_of_g, parser.max_points_to_control, parser.probes, parser.T, parser.noFunctions, parser.W, t_cube);
 
     Logger *logger = new Logger(parser.outputfile);
@@ -56,24 +56,28 @@ int main(int argc, char** argv) {
         ss << "Query #" << i << ": " << endl;
         log(&ss, logger);
 
-        ss << "Brute time : " << t_bf[i] << " ms " << endl;
-        log(&ss, logger);
-        ss << "Cube   time : " << t_cube[i] << " ms " << endl;
-        log(&ss, logger);
-
         for (int j = 0; j < parser.no_nearest_neighbors; j++) {
-            ss << "Brute NN " << j << ":" << "\t" << result_bf[i][j].index << "\t" << inputReader.set.lines[result_bf[i][j].index].id << "\t" << sqrt(result_bf[i][j].distance) << endl;
-            log(&ss, logger);
-
             if ((unsigned) j < result_cube[i].size()) {
-                ss << "Cube  NN " << j << ":" << "\t" << result_cube[i][j].index << "\t" << inputReader.set.lines[result_cube[i][j].index].id << "\t" << sqrt(result_cube[i][j].distance) << endl;
+                ss << "Nearest neighbor-" << j << ":" << "\t" << result_cube[i][j].index << endl;
+                log(&ss, logger);
+
+                ss << "distanceHypercube" << ":" << "\t" << sqrt(result_cube[i][j].distance) << endl;
+                log(&ss, logger);
+                ss << "tHypercube : " << t_cube[i] << " ms " << endl;
                 log(&ss, logger);
             }
+
+            ss << "distanceTrue" << ":" << "\t" << sqrt(result_bf[i][j].distance) << endl;
+            log(&ss, logger);
+
+            ss << "tTrue : " << t_bf[i] << " ms " << endl;
+            log(&ss, logger);
         }
 
         unsigned j = 0;
 
-        ss << "Neighbors within R = " << parser.radius << endl;
+        ss << "R-near neighbors:" << endl;
+        cout << "R = " << parser.radius << endl;
         log(&ss, logger);
 
         while (sqrt(result_bf[i][j].distance) < parser.radius && j < result_bf[i].size()) {
