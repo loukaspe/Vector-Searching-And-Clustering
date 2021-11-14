@@ -62,6 +62,8 @@ void ClusteringSolver::print(ClusteringSolver::Cluster * initialState, int clust
 
         ss << "Size: " << initialState[i].indices.size() << endl;
         log(&ss, logger);
+        cout << "Silhoutte: " << initialState[i].silhouette << endl;
+
 
         if (complete) {
             ss << "IDs: " << endl;
@@ -599,4 +601,73 @@ void log(stringstream *logs, Logger* logger) {
     cout << logs->str();
     logger->log(logs->str());
     logs->str(std::string());
+}
+
+void ClusteringSolver::silhouette(ClusteringSolver::Cluster * lastState, int clusters) {
+    DistanceCalculator calc(false);
+
+    for (int best_cluster = 0; best_cluster < clusters; best_cluster++) { // for each cluster
+        cout << "calculating silhouettte for cluster: " << best_cluster << " ..." << endl;
+
+        double avg_s = 0;
+        int counter = 0;
+
+        for (unsigned x = 0; x < lastState[best_cluster].indices.size(); x++) { // for each point of the best cluster
+            // find second best
+            float mindist = FLT_MAX;
+            int secondbest_cluster = 0;
+
+            for (int y = 0; y < clusters; y++) { // for each cluster other than the best
+                if (y != best_cluster) {
+                    double dist = calc.calculateDistance(input.lines[ lastState[best_cluster].indices[x]], *(lastState[y].center));
+                    if (dist < mindist) {
+                        mindist = dist;
+                        secondbest_cluster = y;
+                    }
+                }
+            }
+
+            // second best is now known
+
+            // find avg distance from best cluster points
+
+            double a = 0;
+
+            for (unsigned x2 = 0; x2 < lastState[best_cluster].indices.size(); x2++) { // for each point of the best cluster
+                a += calc.calculateDistance(input.lines[ lastState[best_cluster].indices[x]], input.lines[lastState[best_cluster].indices[x2]]);
+            }
+
+            if (lastState[best_cluster].indices.size() > 0) {
+                a /= (lastState[best_cluster].indices.size() - 1);
+            }
+
+            // find avg distance from second best cluster points
+
+            double b = 0;
+
+            for (unsigned x2 = 0; x2 < lastState[secondbest_cluster].indices.size(); x2++) { // for each point of the best cluster
+                b += calc.calculateDistance(input.lines[ lastState[best_cluster].indices[x]], input.lines[lastState[secondbest_cluster].indices[x2]]);
+            }
+
+            if (lastState[secondbest_cluster].indices.size() > 0) {
+                b /= lastState[secondbest_cluster].indices.size();
+            }
+
+            double s = 0;
+
+            if (max(b, a) != 0) {
+                s = (b - a) / max(b, a);
+            }
+
+
+            avg_s += s;
+            counter++;
+        }
+
+        if (counter > 0) {
+            avg_s /= counter;
+        }
+
+        lastState[best_cluster].silhouette = avg_s;
+    }
 }

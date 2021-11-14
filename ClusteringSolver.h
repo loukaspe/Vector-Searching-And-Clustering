@@ -20,6 +20,7 @@ public:
     public:
         vector<int> indices;
         DataLine * center;
+        double silhouette;
     };
 
 private:
@@ -39,6 +40,8 @@ public:
     ClusteringSolver::Cluster * cube(int clusters, int t[], int number_of_vector_hash_tables, int number_of_vector_hash_functions, int W, int max_number_M_hypercube, int number_of_hypercube_dimensions, int number_of_probes);
 
     void print(ClusteringSolver::Cluster * initialState, int clusters, bool complete);
+
+    void silhouette(ClusteringSolver::Cluster * lastState, int clusters);
 };
 
 void log(stringstream *logs, Logger* logger);
