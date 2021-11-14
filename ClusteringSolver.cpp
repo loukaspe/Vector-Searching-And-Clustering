@@ -398,5 +398,175 @@ ClusteringSolver::Cluster * ClusteringSolver::lsh(int clusters, int t[], int num
 }
 
 ClusteringSolver::Cluster * ClusteringSolver::cube(int clusters, int t[], int number_of_vector_hash_tables, int number_of_vector_hash_functions, int W, int max_number_M_hypercube, int number_of_hypercube_dimensions, int number_of_probes) {
+    DistanceCalculator calc(false);
 
+    algorithm = "HYPERCUBE";
+
+    // ---------------------------------------
+    //          1a. Initialization - Kmeans++
+    // ---------------------------------------
+    ClusteringSolver::Cluster * currentState = initialization(clusters);
+
+    printInitialState(currentState, clusters);
+
+    int n = (int) input.lines.size();
+    int no_of_g = (int)log2(input.lines.size());
+
+    // ---------------------------------------
+    //          1b. Initialization - LSH
+    // ---------------------------------------
+
+    int T = n / 8;
+
+    NearestNeighbourSolver solver(input);
+
+    HashTable * hashtables = solver.prepareHyperCube(no_of_g, T, number_of_vector_hash_functions, W);
+
+    auto start = chrono::steady_clock::now();
+
+
+    // ----------------------------------------------------
+    //          1c. Initialization - Reverse approach LSH
+    // ----------------------------------------------------
+    map<int, int> item_cluster; // item -> cluster_id
+    map<int, float> item_distance; // item -> distance from cluster
+    map<int, double> item_loop_found; // item -> radius found
+
+    for (unsigned i = 0; i < input.lines.size(); i++) {
+        item_loop_found[i] = -1;
+    }
+
+    bool change;
+
+    for (int counter = 0; counter < 20; counter++) { // Clustering loop
+
+        // ----------------------------------
+        //          2. Assignment
+        // ----------------------------------
+        cout << "Assignment ... " << endl;
+
+        for (unsigned i = 0; i < input.lines.size(); i++) {
+            item_distance[i] = FLT_MAX;
+            item_cluster[i] = -1;
+        }
+
+        DataSet query;
+
+        for (int i = 0; i < clusters; i++) {
+            query.lines.push_back(*currentState[i].center);
+        }
+
+        double R = DBL_MAX;
+
+
+        for (int i = 0; i < clusters; i++) {
+            for (int j = 0; j < clusters; j++) {
+                if (i == j) {
+                    continue;
+                }
+
+                double dist = calc.calculateDistance(*currentState[i].center, *currentState[j].center);
+
+                if (dist < R) {
+                    R = dist;
+                }
+            }
+        }
+
+        R = R / 2;
+
+        change = true;
+
+        while (change == true) { // Reverse approach loop
+            change = false;
+
+            cout << "Scanning in R = " << R << endl;
+
+            vector<NearestNeighbourSolver::NearestNeighbor> * result_cube = solver.cube(hashtables, query, no_of_g, max_number_M_hypercube, number_of_probes, T, number_of_vector_hash_functions, W);
+
+            cout << "result cube " << R << endl;
+
+            for (int cluster_id = 0; cluster_id < clusters; cluster_id++) {
+                unsigned j = 0;
+
+                cout << result_cube[cluster_id].size() << endl;
+                while (j < result_cube[cluster_id].size() && sqrt(result_cube[cluster_id][j].distance) <= R) {
+//                    cout << "loop j = " << j << endl;
+                    int index = result_cube[cluster_id][j].index;
+
+                    if (item_cluster[index] == -1) { // first time discovered
+                        item_cluster[index] = cluster_id;
+                        item_distance[index] = result_cube[cluster_id][j].distance;
+                        item_loop_found[index] = R;
+                        change = true;
+//                        cout << "change " << endl;
+                    } else if (item_cluster[index] == cluster_id) { // already discovered by me
+                        // do nothing
+//                        cout << "nothing to me" << endl;
+                    } else { // discovered by someone else
+                        if (item_loop_found[index] < R) {
+                            // do nothing
+//                            cout << "nothing R" << endl;
+                        } else if (item_loop_found[index] == R) {
+                            double dist = calc.calculateDistance(input.lines[index], *(currentState[cluster_id].center));
+                            if (dist < item_loop_found[index]) {
+                                item_cluster[index] = cluster_id;
+                                item_distance[index] = result_cube[cluster_id][j].distance;
+                                item_loop_found[index] = R;
+                                change = true;
+//                                cout << "change " << endl;
+                            }
+                        }
+                    }
+                    j++;
+                }
+            }
+
+            R = R * 2;
+        }
+
+        cout << " --- lloyd --- " << endl;
+
+        for (map<int, int>::iterator it = item_cluster.begin(); it != item_cluster.end(); ++it) {
+            if (it->second == -1) { // point not assigned to anyone
+                int x = it->first;
+                float mindist = FLT_MAX;
+                int mincluster = 0;
+
+                for (int y = 0; y < clusters; y++) { // for each cluster
+                    double dist = calc.calculateDistance(input.lines[x], *(currentState[y].center));
+                    if (dist < mindist) {
+                        mindist = dist;
+                        mincluster = y;
+                    }
+                }
+
+                currentState[mincluster].indices.push_back(x);
+            } else {
+                currentState[it->second].indices.push_back(it->first);
+            }
+        }
+
+        // ----------------------------------
+        //          3. Update
+        // ----------------------------------
+
+        if (counter < 19) {
+            ClusteringSolver::Cluster * nextState = update(currentState, clusters);
+
+            delete [] currentState;
+
+            currentState = nextState;
+        }
+    }
+
+
+    auto end = chrono::steady_clock::now();
+
+    t[0] = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+
+
+    delete [] hashtables;
+
+    return currentState;
 }

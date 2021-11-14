@@ -44,6 +44,10 @@ public:
     HashTable * prepareHashtables(int nohashtables, int T, int noFunctions, int W);
 
     vector<NearestNeighbourSolver::NearestNeighbor> * lsh(HashTable * hashtables, DataSet & query, int nohashtables, int T, int noFunctions, int W);
+
+    HashTable * prepareHyperCube(int no_of_g, int T, int noFunctions, int W);
+
+    vector<NearestNeighbourSolver::NearestNeighbor> * cube(HashTable * hashtables, DataSet & query, int no_of_g, int max_points_to_control, int probes, int T, int noFunctions, int W);
 };
 
 #endif /* NEARESTNEIGHBOUR_H */

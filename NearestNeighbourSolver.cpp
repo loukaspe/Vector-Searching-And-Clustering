@@ -160,6 +160,7 @@ vector<NearestNeighbourSolver::NearestNeighbor> * NearestNeighbourSolver::cube(u
     return data;
 }
 
+
 // clustering
 HashTable * NearestNeighbourSolver::prepareHashtables(int nohashtables, int T, int noFunctions, int W) {
     unsigned d = input.lines[0].data.size();
@@ -174,6 +175,22 @@ HashTable * NearestNeighbourSolver::prepareHashtables(int nohashtables, int T, i
         for (int l = 0; l < nohashtables; l++) {
             hashtables[l].add(&input.lines[i]);
         }
+    }
+
+    return hashtables;
+}
+
+
+HashTable * NearestNeighbourSolver::prepareHyperCube(int no_of_g, int T, int noFunctions, int W) {
+    unsigned q = query.lines.size();
+    unsigned d = input.lines[0].data.size();
+
+    HashTable * hashtables = new HashTable[1];
+
+    hashtables[0].setup(T, noFunctions, W, d);
+
+    for (unsigned int i = 0; i < input.lines.size(); i++) {
+        hashtables[0].add(&input.lines[i]);
     }
 
     return hashtables;
@@ -204,6 +221,36 @@ vector<NearestNeighbourSolver::NearestNeighbor> * NearestNeighbourSolver::lsh(Ha
             NearestNeighbor n(offset, dist);
             data[i].push_back(n);
 
+        }
+
+        sort(data[i].begin(), data[i].end(), compareNearestNeighbor);
+    }
+
+    return data;
+}
+
+
+vector<NearestNeighbourSolver::NearestNeighbor> *  NearestNeighbourSolver::cube(HashTable * hashtables, DataSet & query, int no_of_g, int max_points_to_control, int probes, int T, int noFunctions, int W) {
+    unsigned q = query.lines.size();
+    unsigned d = input.lines[0].data.size();
+
+    vector<NearestNeighbor> * data = new vector<NearestNeighbor>[q];
+
+    DistanceCalculator calc(false);
+
+    for (unsigned int i = 0; i < query.lines.size(); i++) {
+        set<int> hits;
+        set<int> offsets = hashtables[0].getNeighbors(query.lines[i]);
+
+        for (auto x : offsets) {
+            hits.insert(x);
+        }
+
+        for (auto offset : hits) {
+            double dist = calc.calculateDistance(query.lines[i], input.lines[offset]);
+
+            NearestNeighbor n(offset, dist);
+            data[i].push_back(n);
         }
 
         sort(data[i].begin(), data[i].end(), compareNearestNeighbor);
