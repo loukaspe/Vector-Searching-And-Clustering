@@ -20,12 +20,13 @@ public:
 private:
     DataSet & input;
     string algorithm;
+    string outputFile;
 
     void printInitialState(ClusteringSolver::Cluster * initialState, int clusters);
     ClusteringSolver::Cluster * initialization(int clusters);
     ClusteringSolver::Cluster * update(ClusteringSolver::Cluster * now, int clusters);
 public:
-    ClusteringSolver(DataSet & input);
+    ClusteringSolver(DataSet & input, string outputFile);
     virtual ~ClusteringSolver();
 
     ClusteringSolver::Cluster * lloyd(int clusters, int t[]);

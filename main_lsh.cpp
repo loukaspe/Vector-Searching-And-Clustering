@@ -9,9 +9,11 @@
 #include "FileReader.h"
 #include "HashTable.h"
 #include "NearestNeighbourSolver.h"
-
+#include "Logger.h"
 
 using namespace std;
+
+void log(stringstream *logs, Logger* logger);
 
 int main(int argc, char** argv) {
 
@@ -20,6 +22,8 @@ int main(int argc, char** argv) {
     parser.parseLSH(argc, argv);
     parser.W = 500;
 
+    Logger *logger = new Logger(parser.outputfile);
+    stringstream ss;
 
     FileReader inputReader;
     FileReader queryReader;
@@ -29,7 +33,6 @@ int main(int argc, char** argv) {
 
     parser.T = inputReader.N / 8;
 
-
     cout << "Input N: " << inputReader.N << endl;
     cout << "Query N: " << queryReader.N << endl;
 
@@ -37,7 +40,7 @@ int main(int argc, char** argv) {
     NearestNeighbourSolver solver(inputReader.set, queryReader.set);
 
     cout << "Brute force running ... " << endl;
-    
+
     int t_bf[queryReader.set.lines.size()];
     int t_lsh[queryReader.set.lines.size()];
 
@@ -49,29 +52,41 @@ int main(int argc, char** argv) {
 
     for (unsigned int i = 0; i < queryReader.set.lines.size(); i++) {
         cout << "_____________________________________________________ \n";
-        cout << "Query #" << i << ": " << endl;
-        
-        cout << "Brute time : " << t_bf[i] << " ms " << endl;
-        cout << "LSH   time : " << t_lsh[i] << " ms " << endl;
+        ss << "Query #" << i << ": " << endl;
+        log(&ss, logger);
+
+        ss << "Brute time : " << t_bf[i] << " ms " << endl;
+        log(&ss, logger);
+        ss << "LSH   time : " << t_lsh[i] << " ms " << endl;
+        log(&ss, logger);
 
         for (int j = 0; j < parser.no_nearest_neighbors; j++) {
-            cout << "Brute NN " << j << ":" << "\t" << result_bf[i][j].index << "\t" << inputReader.set.lines[result_bf[i][j].index].id << "\t" << sqrt(result_bf[i][j].distance) << endl;
-            cout << "LSH   NN " << j << ":" << "\t" << result_lsh[i][j].index << "\t" << inputReader.set.lines[result_lsh[i][j].index].id << "\t" << sqrt(result_lsh[i][j].distance) << endl;
+            ss << "Brute NN " << j << ":" << "\t" << result_bf[i][j].index << "\t" << inputReader.set.lines[result_bf[i][j].index].id << "\t" << sqrt(result_bf[i][j].distance) << endl;
+            log(&ss, logger);
+            ss << "LSH   NN " << j << ":" << "\t" << result_lsh[i][j].index << "\t" << inputReader.set.lines[result_lsh[i][j].index].id << "\t" << sqrt(result_lsh[i][j].distance) << endl;
+            log(&ss, logger);
         }
 
         unsigned j = 0;
 
-        cout << "Neighbors within R = " << parser.radius << endl;
+        ss << "Neighbors within R = " << parser.radius << endl;
+        log(&ss, logger);
 
         while (sqrt(result_bf[i][j].distance) < parser.radius && j < result_bf[i].size()) {
-            cout << result_bf[i][j].index << endl;
+            ss << result_bf[i][j].index << endl;
+            log(&ss, logger);
+
             j++;
         }
     }
 
+    logger->close();
 
-
-   
     return 0;
 }
 
+void log(stringstream *logs, Logger* logger) {
+    cout << logs->str();
+    logger->log(logs->str());
+    logs->str(std::string());
+}

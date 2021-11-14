@@ -11,7 +11,7 @@
 #include "HashTable.h"
 #include "NearestNeighbourSolver.h"
 #include "ClusteringSolver.h"
-
+#include "ParametersFileReader.h"
 
 using namespace std;
 
@@ -21,25 +21,26 @@ int main(int argc, char** argv) {
 
     parser.parseClustering(argc, argv);
 
-    // TODO: read configuration file values
+    ParametersFileReader *parametersFileReader = new ParametersFileReader();
+    parametersFileReader->loadParameters(parser.configurationfile);
 
-    int number_of_clusters = 10;
-    int number_of_vector_hash_tables = 3;
-    int number_of_vector_hash_functions = 4;
-    int max_number_M_hypercube = 10;
-    int number_of_hypercube_dimensions = 3;
-    int number_of_probes = 10;
+    int number_of_clusters = parametersFileReader->getNumberOfClusters();
+    int number_of_vector_hash_tables = parametersFileReader->getNumberOfVectorHashTables();
+    int number_of_vector_hash_functions = parametersFileReader->getNumberOfVectorHashFunctions();
+    int max_number_M_hypercube = parametersFileReader->getMaxNumberMHypercube();
+    int number_of_hypercube_dimensions = parametersFileReader->getNumberOfHypercubeDimensions();
+    int number_of_probes = parametersFileReader->getNumberOfProbes();
+
     int W = 500;
-
 
     FileReader inputReader;
 
-    inputReader.load("input_small_id.txt");
+    inputReader.load(parser.inputfile);
 
     cout << "Input N: " << inputReader.N << endl;
 
 
-    ClusteringSolver solver(inputReader.set);
+    ClusteringSolver solver(inputReader.set, parser.outputfile);
 
     ClusteringSolver::Cluster * result = nullptr;
 
